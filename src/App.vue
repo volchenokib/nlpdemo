@@ -44,7 +44,7 @@ export default {
 .footer {
   color: #9c999c;
   font-size: 12px;
-  padding: 10px;
+  padding: 10px 17px;
   &__logo {
     height: 40px;
   }
