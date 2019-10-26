@@ -15,60 +15,110 @@
         </v-stepper-header>
 
         <v-stepper-items>
-          <v-stepper-content step="1">
-            <v-btn class="mb-2" color="primary" outlined large @click="goToNextStep">далее</v-btn>
+          <!-- loader -->
+          <v-progress-linear
+            color="deep-purple accent-4"
+            :active="isLoading"
+            :indeterminate="isLoading"
+            absolute
+            top
+          ></v-progress-linear>
+
+          <!-- step #1 -->
+          <v-stepper-content class="stepper-content" content step="1">
+            <v-btn
+              class="mb-2"
+              color="primary"
+              :disabled="isDisabled"
+              outlined
+              @click="goToNextStep"
+            >далее</v-btn>
 
             <vue-dropzone
               id="1"
               :options="dropzoneOptions"
               :useCustomSlot="true"
-              @vdropzone-file-added="handleUpload"
+              @vdropzone-file-added="isLoading = true"
+              @vdropzone-complete="handleUpload"
+              @vdropzone-removed-file="handleRemoveFile"
             >
               <div class="dropzone-custom-content">
                 <div class="subtitle-1">
                   Перетащите файл сюда или
-                  <v-btn color="primary" depressed small>выберите</v-btn>
+                  <a class="primary--text">выберите</a>
                 </div>
               </div>
             </vue-dropzone>
+          </v-stepper-content>
 
-            <div class="excel-preview">
+          <!-- step #2 -->
+          <v-stepper-content class="stepper-content" step="2">
+            <v-btn
+              class="mb-2 mr-2"
+              color="primary"
+              :disabled="isDisabled"
+              outlined
+              @click="goToPrevStep"
+            >назад</v-btn>
+            <v-btn
+              class="mb-2"
+              color="primary"
+              :disabled="currentCategory == ''"
+              outlined
+              @click="goToNextStep"
+            >далее</v-btn>
+
+            <div class="radio-wrapper">
+              <v-radio-group
+                v-model="currentCategory"
+                v-if="!isLoading"
+                class="ml-3"
+                @change="chooseCategory"
+              >
+                <v-radio
+                  v-for="(category, index) in categoryList"
+                  color="primary"
+                  :key="index"
+                  :label="category.name"
+                  :value="category.value"
+                ></v-radio>
+              </v-radio-group>
+            </div>
+          </v-stepper-content>
+
+          <!-- step #3 -->
+          <v-stepper-content class="stepper-content" step="3">
+            <v-btn
+              class="mb-2 mr-2"
+              color="primary"
+              :disabled="isDisabled"
+              outlined
+              @click="goToPrevStep"
+            >назад</v-btn>
+
+            <v-btn
+              color="blue-grey"
+              class="mb-2 white--text"
+              :disabled="isDisabled"
+              @click="fileDownload"
+            >
+              <v-icon class="mr-1" dark>mdi-cloud-download</v-icon>скачать
+            </v-btn>
+            <div class="excel-preview--large">
+              <span
+                v-if="isLoading"
+                class="preview-title title grey--text text--lighten-1"
+              >Предпросмотр недоступен</span>
               <v-data-table
+                v-else
                 item-key="name"
                 :headers="headers"
                 :items="tickets"
                 hide-default-footer
+                disable-sort
                 dense
               ></v-data-table>
             </div>
-          </v-stepper-content>
-
-          <v-stepper-content step="2">
-            <v-btn class="mb-2" text @click="goToPrevStep">назад</v-btn>
-            <v-btn class="mb-2" text color="primary" @click="goToNextStep">далее</v-btn>
-
-            <v-radio-group v-model="radioGroup">
-              <v-radio
-                v-for="(category, index) in stuff"
-                :key="index"
-                :label="category.name"
-                :value="category.value"
-              ></v-radio>
-            </v-radio-group>
-          </v-stepper-content>
-
-          <v-stepper-content step="3">
-            <v-btn class="mb-2" text @click="goToPrevStep">назад</v-btn>
-            <v-btn class="mb-2" text color="primary" @click="fileDownload">скачать</v-btn>
-
-            <v-dialog v-model="dialog" persistent width="300">
-              <v-card color="primary" dark>
-                <v-card-text>
-                  загрузка ...
-                  <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
-                </v-card-text>
-              </v-card>
-            </v-dialog>
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
@@ -80,6 +130,7 @@
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import XLSX from "xlsx";
+import axios from "axios";
 
 export default {
   components: {
@@ -90,21 +141,18 @@ export default {
     isDisabled: true,
     isLoading: false,
     uploadedFile: [],
-    radioGroup: 1,
-    stuff: [
-      { name: "кабель", value: "кабель" },
-      { name: "канат", value: "канат" },
-      { name: "колодец", value: "колодец" }
-    ],
-    dialog: false,
-
+    uploadedFileName: "",
     dropzoneOptions: {
       url: "https://httpbin.org/post",
       acceptedFiles: ".xls, .xlsx",
       addRemoveLinks: true
     },
     tickets: [{ name: "test" }],
-    headers: ["Test header"]
+    headers: ["Test header"],
+
+    currentCategory: "",
+    url:
+      "https://firebasestorage.googleapis.com/v0/b/nlp-parser-8da24.appspot.com/o/g16%20-%2025179%20-%20%D0%BA%D0%B0%D0%B1%D0%B5%D0%BB%D1%8C.xlsx"
   }),
 
   watch: {
@@ -122,23 +170,96 @@ export default {
     this.interval = setInterval(() => {}, 1000);
   },
 
+  computed: {
+    categoryList() {
+      const g16 = [
+        { name: "кабель", value: "кабель" },
+        { name: "канат", value: "канат" },
+        { name: "колодец", value: "колодец" },
+        { name: "крепление", value: "крепление" },
+        { name: "металлорукав", value: "металлорукав" },
+        { name: "настил", value: "настил" },
+        { name: "ограждение", value: "ограждение" },
+        { name: "опоры", value: "опоры" },
+        { name: "пластина", value: "пластина" },
+        { name: "площадка", value: "площадка" },
+        { name: "стойка", value: "стойка" },
+        { name: "стропы", value: "стропы" },
+        { name: "траверса", value: "траверса" },
+        { name: "устройство", value: "устройство" }
+      ];
+      const g21 = [
+        { name: "кабели", value: "кабели" },
+        { name: "муфта", value: "муфта" },
+        { name: "наконечники", value: "наконечники" },
+        { name: "провод", value: "провод" }
+      ];
+      const g31 = [
+        { name: "бобышка", value: "бобышка" },
+        { name: "днище", value: "днище" },
+        { name: "заглушки", value: "заглушки" },
+        { name: "компенсатор", value: "компенсатор" },
+        { name: "отводы", value: "отводы" },
+        { name: "переход", value: "переход" },
+        { name: "тройники", value: "тройники" }
+      ];
+
+      if (this.uploadedFileName == "g16 - 25179.XLSX") {
+        return g16;
+      } else if (this.uploadedFileName == "g21 - 25243.XLSX") {
+        return g21;
+      } else if (this.uploadedFileName == "g31 - 64977.XLSX") {
+        return g31;
+      } else {
+        console.log("unknown file");
+        return [{ name: "unknown", value: "unknown" }];
+      }
+    }
+  },
+
   methods: {
     goToPrevStep() {
       this.step--;
     },
 
     goToNextStep() {
+      this.isDisabled = true;
+      if (this.step == 1) {
+        this.currentCategory = "";
+        this.isLoading = true;
+        setTimeout(
+          () => ((this.isLoading = false), (this.isDisabled = false)),
+          5000
+        );
+      } else if (this.step == 2) {
+        this.isLoading = true;
+        setTimeout(
+          () => ((this.isLoading = false), (this.isDisabled = false)),
+          5000
+        );
+      }
       this.step++;
-      this.dialog = true;
     },
 
     fileDownload() {
-      console.log("");
+      axios({
+        method: "get",
+        url: this.url,
+        responseType: "arraybuffer"
+      })
+        .then(response => {
+          this.forceFileDownload(response);
+        })
+        .catch(() => console.log("error occured"));
     },
-    handleUpload(file) {
-      // this.$refs["excel-upload-input"].click();
-      this.uploadedFile.push(file);
-      console.log("file", file);
+
+    forceFileDownload(response) {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.xlsx");
+      document.body.appendChild(link);
+      link.click();
     },
 
     /** HELPERS **/
@@ -182,6 +303,21 @@ export default {
         }
       });
       return result;
+    },
+    handleUpload(file) {
+      // this.$refs["excel-upload-input"].click();
+      console.log("file", file);
+      this.isDisabled = false;
+      this.isLoading = false;
+      this.uploadedFileName = file.name;
+    },
+    handleRemoveFile() {
+      this.isDisabled = true;
+      this.uploadedFileName = "";
+    },
+
+    chooseCategory(value) {
+      console.log("value", value);
     }
   }
 };
@@ -212,7 +348,24 @@ export default {
   color: #314b5f;
 }
 
+.stepper-content {
+  height: 75vh;
+}
+
 .excel-preview {
-  height: 50vh;
+  // height: 75vh;
+  &--large {
+    height: 66vh;
+  }
+}
+.preview-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.radio-wrapper {
+  height: 64vh;
 }
 </style>
