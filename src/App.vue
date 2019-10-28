@@ -20,8 +20,9 @@
       </div>
 
       <v-spacer></v-spacer>
-
-      <img class="footer__logo" src="./assets/eco_logo.png" alt="logo" />
+      <a href="https://econophysica.ru/" target="_blank">
+        <img class="footer__logo" src="./assets/eco_logo.png" alt="logo" />
+      </a>
     </v-footer>
   </v-app>
 </template>

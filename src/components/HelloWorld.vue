@@ -35,7 +35,7 @@
             >далее</v-btn>
 
             <vue-dropzone
-              id="1"
+              id="customdropzone"
               :options="dropzoneOptions"
               :useCustomSlot="true"
               @vdropzone-file-added="isLoading = true"
@@ -100,7 +100,7 @@
               color="blue-grey"
               class="mb-2 white--text"
               :disabled="isDisabled"
-              @click="fileDownload"
+              @click="forceFileDownload"
             >
               <v-icon class="mr-1" dark>mdi-cloud-download</v-icon>скачать
             </v-btn>
@@ -109,6 +109,7 @@
                 v-if="isLoading"
                 class="preview-title title grey--text text--lighten-1"
               >Предпросмотр недоступен</span>
+
               <v-data-table
                 v-else
                 item-key="name"
@@ -145,14 +146,17 @@ export default {
     dropzoneOptions: {
       url: "https://httpbin.org/post",
       acceptedFiles: ".xls, .xlsx",
-      addRemoveLinks: true
+      addRemoveLinks: true,
+      dictRemoveFile: "удалить",
+      dictCancelUpload: "отменить",
+      dictCancelUploadConfirmation: "Вы уверены, что хотите отменить загрузку?"
     },
     tickets: [{ name: "test" }],
     headers: ["Test header"],
 
+    baseUrl: "http://volchenok.com/assets/",
     currentCategory: "",
-    url:
-      "https://firebasestorage.googleapis.com/v0/b/nlp-parser-8da24.appspot.com/o/g16%20-%2025179%20-%20%D0%BA%D0%B0%D0%B1%D0%B5%D0%BB%D1%8C.xlsx"
+    excel: ""
   }),
 
   watch: {
@@ -233,28 +237,83 @@ export default {
         );
       } else if (this.step == 2) {
         this.isLoading = true;
+        this.fileDownload();
         setTimeout(
-          () => ((this.isLoading = false), (this.isDisabled = false)),
+          () => (
+            (this.isLoading = false),
+            (this.isDisabled = false),
+            this.createTable(this.excel)
+          ),
           5000
         );
       }
       this.step++;
     },
 
+    handleUpload(file) {
+      // this.$refs["excel-upload-input"].click();
+      this.isDisabled = false;
+      this.isLoading = false;
+      this.uploadedFileName = file.name;
+    },
+
+    handleRemoveFile() {
+      this.isDisabled = true;
+      this.uploadedFileName = "";
+    },
+
+    chooseCategory(value) {},
+
     fileDownload() {
+      const uri =
+        this.uploadedFileName.split(".")[0] +
+        " - " +
+        this.currentCategory +
+        ".xlsx";
+      const encodedURI = encodeURIComponent(uri);
       axios({
         method: "get",
-        url: this.url,
+        url: `${this.baseUrl}${encodedURI}`,
         responseType: "arraybuffer"
       })
         .then(response => {
-          this.forceFileDownload(response);
+          console.log("response", response);
+          // this.forceFileDownload(response);
+          this.excel = response
         })
         .catch(() => console.log("error occured"));
+
+      // prettier-ignore
+      //const response = `${this.baseUrl}${this.uploadedFileName.split(".")[0]} - ${this.currentCategory}.xlsx`;
+      //this.forceFileDownload(response);
     },
 
-    forceFileDownload(response) {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+    createTable() {
+      var arraybuffer = this.excel.data;
+      var data = new Uint8Array(arraybuffer);
+      var arr = new Array();
+      for (var i = 0; i != data.length; ++i)
+        arr[i] = String.fromCharCode(data[i]);
+      var bstr = arr.join("");
+      var workbook = XLSX.read(bstr, {
+        type: "binary"
+      });
+
+      console.log("workbook", workbook);
+
+      this.workbook_to_json(workbook);
+
+      // var sheet_name = workbook.SheetNames[1];
+      // var worksheet = workbook.Sheets[sheet_name];
+      // self.parseReceive(worksheet, callback);
+      // self.parseReceive(worksheet);
+    },
+
+    forceFileDownload() {
+      const file = this.excel;
+      const url = window.URL.createObjectURL(new Blob([file.data]));
+
+      // const url = response;
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", "file.xlsx");
@@ -278,6 +337,7 @@ export default {
         if (cell && cell.t) hdr = XLSX.utils.format_cell(cell);
         headers.push(hdr);
       }
+      console.log("get_header_row", sheet);
       return headers;
     },
     fixdata(data) {
@@ -302,28 +362,15 @@ export default {
           result[sheetName] = roa;
         }
       });
+      console.log("workbook_to_json", result);
+      this.get_header_row(result);
       return result;
-    },
-    handleUpload(file) {
-      // this.$refs["excel-upload-input"].click();
-      console.log("file", file);
-      this.isDisabled = false;
-      this.isLoading = false;
-      this.uploadedFileName = file.name;
-    },
-    handleRemoveFile() {
-      this.isDisabled = true;
-      this.uploadedFileName = "";
-    },
-
-    chooseCategory(value) {
-      console.log("value", value);
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .stepper {
   width: 100%;
 }
@@ -342,6 +389,15 @@ export default {
 .dropzone-custom-title {
   margin-top: 0;
   color: #00b782;
+}
+
+#customdropzone .dz-preview {
+  height: 150px;
+  width: 200px;
+}
+
+#customdropzone .dz-details {
+  background-color: #6f9cd6;
 }
 
 .subtitle {
