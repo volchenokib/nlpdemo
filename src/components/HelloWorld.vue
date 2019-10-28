@@ -104,7 +104,7 @@
             >
               <v-icon class="mr-1" dark>mdi-cloud-download</v-icon>скачать
             </v-btn>
-            <div class="excel-preview--large">
+            <!-- <div class="excel-preview--large">
               <span
                 v-if="isLoading"
                 class="preview-title title grey--text text--lighten-1"
@@ -119,7 +119,7 @@
                 disable-sort
                 dense
               ></v-data-table>
-            </div>
+            </div>-->
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
@@ -156,7 +156,8 @@ export default {
 
     baseUrl: "http://volchenok.com/assets/",
     currentCategory: "",
-    excel: ""
+    excel: "",
+    linkToDownload: ""
   }),
 
   watch: {
@@ -241,8 +242,8 @@ export default {
         setTimeout(
           () => (
             (this.isLoading = false),
-            (this.isDisabled = false),
-            this.createTable(this.excel)
+            (this.isDisabled = false)
+            // this.createTable(this.excel)
           ),
           5000
         );
@@ -265,27 +266,27 @@ export default {
     chooseCategory(value) {},
 
     fileDownload() {
-      const uri =
-        this.uploadedFileName.split(".")[0] +
-        " - " +
-        this.currentCategory +
-        ".xlsx";
-      const encodedURI = encodeURIComponent(uri);
-      axios({
-        method: "get",
-        url: `${this.baseUrl}${encodedURI}`,
-        responseType: "arraybuffer"
-      })
-        .then(response => {
-          console.log("response", response);
-          // this.forceFileDownload(response);
-          this.excel = response
-        })
-        .catch(() => console.log("error occured"));
+      // const uri =
+      //   this.uploadedFileName.split(".")[0] +
+      //   " - " +
+      //   this.currentCategory +
+      //   ".xlsx";
+      // const encodedURI = encodeURIComponent(uri);
+      // axios({
+      //   method: "get",
+      //   url: `${this.baseUrl}${encodedURI}`,
+      //   responseType: "arraybuffer"
+      // })
+      //   .then(response => {
+      //     console.log("response", response);
+      //     // this.forceFileDownload(response);
+      //     this.excel = response
+      //   })
+      //   .catch(() => console.log("error occured"));
 
       // prettier-ignore
-      //const response = `${this.baseUrl}${this.uploadedFileName.split(".")[0]} - ${this.currentCategory}.xlsx`;
-      //this.forceFileDownload(response);
+      this.linkToDownload = `${this.baseUrl}${this.uploadedFileName.split(".")[0]} - ${this.currentCategory}.xlsx`;
+      // this.forceFileDownload(response);
     },
 
     createTable() {
@@ -309,11 +310,20 @@ export default {
       // self.parseReceive(worksheet);
     },
 
-    forceFileDownload() {
-      const file = this.excel;
-      const url = window.URL.createObjectURL(new Blob([file.data]));
+    // forceFileDownload() {
+    //   const file = this.excel;
+    //   const url = window.URL.createObjectURL(new Blob([file.data]));
 
-      // const url = response;
+    //   // const url = response;
+    //   const link = document.createElement("a");
+    //   link.href = url;
+    //   link.setAttribute("download", "file.xlsx");
+    //   document.body.appendChild(link);
+    //   link.click();
+    // },
+
+    forceFileDownload() {
+      const url = this.linkToDownload;
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", "file.xlsx");
@@ -392,7 +402,7 @@ export default {
 }
 
 #customdropzone .dz-preview {
-  height: 150px;
+  height: 200px;
   width: 200px;
 }
 
