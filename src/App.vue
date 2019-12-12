@@ -15,30 +15,30 @@
 
     <v-footer padless class="footer">
       <div class="text-left footer_text">
-        <strong class="text-capitalize">econpysica,</strong>
+        <strong>volchenok,</strong>
         {{ new Date().getFullYear() }}
       </div>
 
       <v-spacer></v-spacer>
-      <a href="https://econophysica.ru/" target="_blank">
-        <img class="footer__logo" src="./assets/eco_logo.png" alt="logo" />
+      <a href="https://volchenok.com/" target="_blank">
+        <img class="footer__logo" src="./assets/logo_transparent.png" alt="logo" />
       </a>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
+import HelloWorld from './components/HelloWorld'
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     HelloWorld
   },
   data: () => ({
     //
   })
-};
+}
 </script>
 
 <style lang="scss" scoped>

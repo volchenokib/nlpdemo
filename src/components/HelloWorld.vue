@@ -32,7 +32,8 @@
               :disabled="isDisabled"
               outlined
               @click="goToNextStep"
-            >далее</v-btn>
+              >далее</v-btn
+            >
 
             <vue-dropzone
               id="customdropzone"
@@ -59,14 +60,16 @@
               :disabled="isDisabled"
               outlined
               @click="goToPrevStep"
-            >назад</v-btn>
+              >назад</v-btn
+            >
             <v-btn
               class="mb-2"
               color="primary"
               :disabled="currentCategory == ''"
               outlined
               @click="goToNextStep"
-            >далее</v-btn>
+              >далее</v-btn
+            >
 
             <div class="radio-wrapper">
               <v-radio-group
@@ -94,7 +97,8 @@
               :disabled="isDisabled"
               outlined
               @click="goToPrevStep"
-            >назад</v-btn>
+              >назад</v-btn
+            >
 
             <v-btn
               color="blue-grey"
@@ -108,7 +112,8 @@
               <span
                 v-if="isLoading"
                 class="preview-title title grey--text text--lighten-1"
-              >Предпросмотр недоступен</span>
+                >Предпросмотр недоступен</span
+              >
 
               <v-data-table
                 v-else
@@ -128,10 +133,10 @@
 </template>
 
 <script>
-import vue2Dropzone from "vue2-dropzone";
-import "vue2-dropzone/dist/vue2Dropzone.min.css";
-import XLSX from "xlsx";
-import axios from "axios";
+import vue2Dropzone from 'vue2-dropzone'
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+import XLSX from 'xlsx'
+import axios from 'axios'
 
 export default {
   components: {
@@ -142,166 +147,166 @@ export default {
     isDisabled: true,
     isLoading: false,
     uploadedFile: [],
-    uploadedFileName: "",
+    uploadedFileName: '',
     dropzoneOptions: {
-      url: "https://httpbin.org/post",
-      acceptedFiles: ".xls, .xlsx",
+      url: 'https://httpbin.org/post',
+      acceptedFiles: '.xls, .xlsx',
       addRemoveLinks: true,
-      dictRemoveFile: "удалить",
-      dictCancelUpload: "отменить",
-      dictCancelUploadConfirmation: "Вы уверены, что хотите отменить загрузку?"
+      dictRemoveFile: 'удалить',
+      dictCancelUpload: 'отменить',
+      dictCancelUploadConfirmation: 'Вы уверены, что хотите отменить загрузку?'
     },
-    tickets: [{ name: "test" }],
-    headers: ["Test header"],
+    tickets: [{ name: 'test' }],
+    headers: ['Test header'],
 
-    baseUrl: "http://volchenok.com/assets/",
-    currentCategory: "",
-    excel: ""
+    baseUrl: 'http://volchenok.com/assets/',
+    currentCategory: '',
+    excel: ''
   }),
 
-  watch: {
-    dialog(val) {
-      if (!val) return;
-      setTimeout(() => (this.dialog = false), 4000);
-    }
-  },
-
   beforeDestroy() {
-    clearInterval(this.interval);
+    clearInterval(this.interval)
   },
 
   mounted() {
-    this.interval = setInterval(() => {}, 1000);
+    this.interval = setInterval(() => {}, 1000)
+  },
+
+  watch: {
+    dialog(val) {
+      if (!val) return
+      setTimeout(() => (this.dialog = false), 4000)
+    }
   },
 
   computed: {
     categoryList() {
       const g16 = [
-        { name: "кабель", value: "кабель" },
-        { name: "канат", value: "канат" },
-        { name: "колодец", value: "колодец" },
-        { name: "крепление", value: "крепление" },
-        { name: "металлорукав", value: "металлорукав" },
-        { name: "настил", value: "настил" },
-        { name: "ограждение", value: "ограждение" },
-        { name: "опоры", value: "опоры" },
-        { name: "пластина", value: "пластина" },
-        { name: "площадка", value: "площадка" },
-        { name: "стойка", value: "стойка" },
-        { name: "стропы", value: "стропы" },
-        { name: "траверса", value: "траверса" },
-        { name: "устройство", value: "устройство" }
-      ];
+        { name: 'кабель', value: 'кабель' },
+        { name: 'канат', value: 'канат' },
+        { name: 'колодец', value: 'колодец' },
+        { name: 'крепление', value: 'крепление' },
+        { name: 'металлорукав', value: 'металлорукав' },
+        { name: 'настил', value: 'настил' },
+        { name: 'ограждение', value: 'ограждение' },
+        { name: 'опоры', value: 'опоры' },
+        { name: 'пластина', value: 'пластина' },
+        { name: 'площадка', value: 'площадка' },
+        { name: 'стойка', value: 'стойка' },
+        { name: 'стропы', value: 'стропы' },
+        { name: 'траверса', value: 'траверса' },
+        { name: 'устройство', value: 'устройство' }
+      ]
       const g21 = [
-        { name: "кабели", value: "кабели" },
-        { name: "муфта", value: "муфта" },
-        { name: "наконечники", value: "наконечники" },
-        { name: "провод", value: "провод" }
-      ];
+        { name: 'кабели', value: 'кабели' },
+        { name: 'муфта', value: 'муфта' },
+        { name: 'наконечники', value: 'наконечники' },
+        { name: 'провод', value: 'провод' }
+      ]
       const g31 = [
-        { name: "бобышка", value: "бобышка" },
-        { name: "днище", value: "днище" },
-        { name: "заглушки", value: "заглушки" },
-        { name: "компенсатор", value: "компенсатор" },
-        { name: "отводы", value: "отводы" },
-        { name: "переход", value: "переход" },
-        { name: "тройники", value: "тройники" }
-      ];
+        { name: 'бобышка', value: 'бобышка' },
+        { name: 'днище', value: 'днище' },
+        { name: 'заглушки', value: 'заглушки' },
+        { name: 'компенсатор', value: 'компенсатор' },
+        { name: 'отводы', value: 'отводы' },
+        { name: 'переход', value: 'переход' },
+        { name: 'тройники', value: 'тройники' }
+      ]
 
-      if (this.uploadedFileName == "g16 - 25179.XLSX") {
-        return g16;
-      } else if (this.uploadedFileName == "g21 - 25243.XLSX") {
-        return g21;
-      } else if (this.uploadedFileName == "g31 - 64977.XLSX") {
-        return g31;
+      if (this.uploadedFileName === '16 - 25179.XLSX') {
+        return g16
+      } else if (this.uploadedFileName === 'g21 - 25243.XLSX') {
+        return g21
+      } else if (this.uploadedFileName === 'g31 - 64977.XLSX') {
+        return g31
       } else {
-        console.log("unknown file");
-        return [{ name: "unknown", value: "unknown" }];
+        console.log('unknown file')
+        return [{ name: 'unknown', value: 'unknown' }]
       }
     }
   },
 
   methods: {
     goToPrevStep() {
-      this.step--;
+      this.step--
     },
 
     goToNextStep() {
-      this.isDisabled = true;
-      if (this.step == 1) {
-        this.currentCategory = "";
-        this.isLoading = true;
+      this.isDisabled = true
+      if (this.step === 1) {
+        this.currentCategory = ''
+        this.isLoading = true
         setTimeout(
-          () => ((this.isLoading = false), (this.isDisabled = false)),
+          () => (this.isLoading = false)((this.isDisabled = false)),
           5000
-        );
-      } else if (this.step == 2) {
-        this.isLoading = true;
-        this.fileDownload();
+        )
+      } else if (this.step === 2) {
+        this.isLoading = true
+        this.fileDownload()
         setTimeout(
-          () => (
-            (this.isLoading = false),
-            (this.isDisabled = false),
-            this.createTable(this.excel)
-          ),
+          () =>
+            (this.isLoading = false)((this.isDisabled = false))(
+              this.createTable(this.excel)
+            ),
           5000
-        );
+        )
       }
-      this.step++;
+      this.step++
     },
 
     handleUpload(file) {
       // this.$refs["excel-upload-input"].click();
-      this.isDisabled = false;
-      this.isLoading = false;
-      this.uploadedFileName = file.name;
+      this.isDisabled = false
+      this.isLoading = false
+      this.uploadedFileName = file.name
     },
 
     handleRemoveFile() {
-      this.isDisabled = true;
-      this.uploadedFileName = "";
+      this.isDisabled = true
+      this.uploadedFileName = ''
     },
 
     chooseCategory(value) {},
 
     fileDownload() {
       const uri =
-        this.uploadedFileName.split(".")[0] +
-        " - " +
+        this.uploadedFileName.split('.')[0] +
+        ' - ' +
         this.currentCategory +
-        ".xlsx";
-      const encodedURI = encodeURIComponent(uri);
+        '.xlsx'
+      const encodedURI = encodeURIComponent(uri)
       axios({
-        method: "get",
+        method: 'get',
         url: `${this.baseUrl}${encodedURI}`,
-        responseType: "arraybuffer"
+        responseType: 'arraybuffer'
       })
         .then(response => {
-          console.log("response", response);
+          console.log('response', response)
           // this.forceFileDownload(response);
           this.excel = response
         })
-        .catch(() => console.log("error occured"));
+        .catch(() => console.log('error occured'))
 
       // prettier-ignore
-      //const response = `${this.baseUrl}${this.uploadedFileName.split(".")[0]} - ${this.currentCategory}.xlsx`;
-      //this.forceFileDownload(response);
+      // const response = `${this.baseUrl}${this.uploadedFileName.split(".")[0]} - ${this.currentCategory}.xlsx`;
+      // this.forceFileDownload(response);
     },
 
     createTable() {
-      var arraybuffer = this.excel.data;
-      var data = new Uint8Array(arraybuffer);
-      var arr = new Array();
-      for (var i = 0; i != data.length; ++i)
-        arr[i] = String.fromCharCode(data[i]);
-      var bstr = arr.join("");
+      var arraybuffer = this.excel.data
+      var data = new Uint8Array(arraybuffer)
+      var arr = []
+      for (var i = 0; i !== data.length; ++i) {
+        arr[i] = String.fromCharCode(data[i])
+      }
+      var bstr = arr.join('')
       var workbook = XLSX.read(bstr, {
-        type: "binary"
-      });
+        type: 'binary'
+      })
 
-      console.log("workbook", workbook);
+      console.log('workbook', workbook)
 
-      this.workbook_to_json(workbook);
+      this.workbook_to_json(workbook)
 
       // var sheet_name = workbook.SheetNames[1];
       // var worksheet = workbook.Sheets[sheet_name];
@@ -310,64 +315,63 @@ export default {
     },
 
     forceFileDownload() {
-      const file = this.excel;
-      const url = window.URL.createObjectURL(new Blob([file.data]));
+      const file = this.excel
+      const url = window.URL.createObjectURL(new Blob([file.data]))
 
       // const url = response;
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "file.xlsx");
-      document.body.appendChild(link);
-      link.click();
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'file.xlsx')
+      document.body.appendChild(link)
+      link.click()
     },
 
     /** HELPERS **/
     get_header_row(sheet) {
-      var headers = [],
-        range = XLSX.utils.decode_range(sheet["!ref"]);
-      var C,
-        R = range.s.r; /* start in the first row */
+      var headers = []
+      var range = XLSX.utils.decode_range(sheet['!ref'])
+      var C
+      var R = range.s.r /* start in the first row */
       for (C = range.s.c; C <= range.e.c; ++C) {
         /* walk every column in the range */
-        var cell =
-          sheet[
-            XLSX.utils.encode_cell({ c: C, r: R })
-          ]; /* find the cell in the first row */
-        var hdr = "UNKNOWN " + C; // <-- replace with your desired default
-        if (cell && cell.t) hdr = XLSX.utils.format_cell(cell);
-        headers.push(hdr);
+        var cell = sheet[XLSX.utils.encode_cell({ c: C, r: R })]
+        /* find the cell in the first row */
+        var hdr = 'UNKNOWN ' + C // <-- replace with your desired default
+        if (cell && cell.t) hdr = XLSX.utils.format_cell(cell)
+        headers.push(hdr)
       }
-      console.log("get_header_row", sheet);
-      return headers;
+      console.log('get_header_row', sheet)
+      return headers
     },
     fixdata(data) {
-      var o = "",
-        l = 0,
-        w = 10240;
-      for (; l < data.byteLength / w; ++l)
+      var o = ''
+      var l = 0
+      var w = 10240
+      for (; l < data.byteLength / w; ++l) {
         o += String.fromCharCode.apply(
           null,
           new Uint8Array(data.slice(l * w, l * w + w))
-        );
-      o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
-      return o;
+        )
+      }
+      o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)))
+      return o
     },
     workbook_to_json(workbook) {
-      var result = {};
+      var result = {}
       workbook.SheetNames.forEach(function(sheetName) {
         var roa = XLSX.utils.sheet_to_row_object_array(
           workbook.Sheets[sheetName]
-        );
+        )
         if (roa.length > 0) {
-          result[sheetName] = roa;
+          result[sheetName] = roa
         }
-      });
-      console.log("workbook_to_json", result);
-      this.get_header_row(result);
-      return result;
+      })
+      console.log('workbook_to_json', result)
+      this.get_header_row(result)
+      return result
     }
   }
-};
+}
 </script>
 
 <style lang="scss">
