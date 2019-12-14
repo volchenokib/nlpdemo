@@ -236,10 +236,9 @@ export default {
       if (this.step === 1) {
         this.currentCategory = ''
         this.isLoading = true
-        setTimeout(
-          () => (this.isLoading = false)((this.isDisabled = false)),
-          5000
-        )
+        setTimeout(() => {
+          ;(this.isLoading = false)((this.isDisabled = false))
+        }, 5000)
       } else if (this.step === 2) {
         this.isLoading = true
         this.fileDownload()
