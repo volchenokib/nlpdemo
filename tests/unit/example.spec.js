@@ -1,18 +1,8 @@
 import { shallowMount } from '@vue/test-utils'
-// import HelloWorld from '@/components/HelloWorld.vue'
+import fileUploader from '@/components/fileUploader.vue'
 
-// describe('HelloWorld.vue', () => {
-//   it('renders props.msg when passed', () => {
-//     const msg = 'new message'
-//     const wrapper = shallowMount(HelloWorld, {
-//       propsData: { msg }
-//     })
-//     expect(wrapper.text()).toMatch(msg)
-//   })
-// })
-
-describe('component.vue', () => {
-  test('setup correctly', () => {
+describe('fileUploader', () => {
+  it('setup correctly', () => {
     expect(true).toBe(true)
   })
 })

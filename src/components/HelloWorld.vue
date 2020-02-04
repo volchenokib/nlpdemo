@@ -3,15 +3,15 @@
     <v-layout text-lef wrap>
       <v-stepper class="stepper" v-model="step">
         <v-stepper-header>
-          <v-stepper-step step="1">Загрузка файла</v-stepper-step>
+          <v-stepper-step class="text-capitalize" step="1">file uploding</v-stepper-step>
 
           <v-divider></v-divider>
 
-          <v-stepper-step step="2">Выбор категории товара</v-stepper-step>
+          <v-stepper-step class="text-capitalize" step="2">product category</v-stepper-step>
 
           <v-divider></v-divider>
 
-          <v-stepper-step step="3">Парсинг</v-stepper-step>
+          <v-stepper-step class="text-capitalize" step="3">result</v-stepper-step>
         </v-stepper-header>
 
         <v-stepper-items>
@@ -25,32 +25,7 @@
           ></v-progress-linear>
 
           <!-- step #1 -->
-          <v-stepper-content class="stepper-content" content step="1">
-            <v-btn
-              class="mb-2"
-              color="primary"
-              :disabled="isDisabled"
-              outlined
-              @click="goToNextStep"
-              >далее</v-btn
-            >
-
-            <vue-dropzone
-              id="customdropzone"
-              :options="dropzoneOptions"
-              :useCustomSlot="true"
-              @vdropzone-file-added="isLoading = true"
-              @vdropzone-complete="handleUpload"
-              @vdropzone-removed-file="handleRemoveFile"
-            >
-              <div class="dropzone-custom-content">
-                <div class="subtitle-1">
-                  Перетащите файл сюда или
-                  <a class="primary--text">выберите</a>
-                </div>
-              </div>
-            </vue-dropzone>
-          </v-stepper-content>
+          <component v-bind:is="currentTabComponent" @next="goToNextStep"></component>
 
           <!-- step #2 -->
           <v-stepper-content class="stepper-content" step="2">
@@ -60,16 +35,14 @@
               :disabled="isDisabled"
               outlined
               @click="goToPrevStep"
-              >назад</v-btn
-            >
+            >назад</v-btn>
             <v-btn
               class="mb-2"
               color="primary"
               :disabled="currentCategory == ''"
               outlined
               @click="goToNextStep"
-              >далее</v-btn
-            >
+            >далее</v-btn>
 
             <div class="radio-wrapper">
               <v-radio-group
@@ -97,8 +70,7 @@
               :disabled="isDisabled"
               outlined
               @click="goToPrevStep"
-              >назад</v-btn
-            >
+            >назад</v-btn>
 
             <v-btn
               color="blue-grey"
@@ -133,15 +105,16 @@
 </template>
 
 <script>
-import vue2Dropzone from 'vue2-dropzone'
-import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+// import vue2Dropzone from 'vue2-dropzone'
+// import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+import fileUploader from '@/components/fileUploader.vue'
 import XLSX from 'xlsx'
 import axios from 'axios'
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
 export default {
-  components: {
-    vueDropzone: vue2Dropzone
-  },
+  components: { fileUploader },
+
   data: () => ({
     step: 1,
     isDisabled: true,
@@ -180,6 +153,13 @@ export default {
   },
 
   computed: {
+    currentTabComponent() {
+      if (this.step === 1) {
+        return 'fileUploader'
+      } else {
+        return ''
+      }
+    },
     categoryList() {
       const g16 = [
         { name: 'кабель', value: 'кабель' },
@@ -231,7 +211,8 @@ export default {
       this.step--
     },
 
-    goToNextStep() {
+    goToNextStep(payload) {
+      console.log('payload', payload)
       this.isDisabled = true
       if (this.step === 1) {
         this.currentCategory = ''
