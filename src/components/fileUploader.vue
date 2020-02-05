@@ -39,10 +39,11 @@ export default {
     dropzoneOptions: {
       url: 'https://httpbin.org/post',
       acceptedFiles: '.xls, .xlsx',
-      addRemoveLinks: true
-      // dictRemoveFile: 'удалить',
-      // dictCancelUpload: 'отменить',
-      // dictCancelUploadConfirmation: 'Вы уверены, что хотите отменить загрузку?'
+      thumbnailWidth: 150,
+      maxFilesize: 0.5,
+      addRemoveLinks: true,
+      uploadMultiple: false,
+      maxFiles: 1
     },
     tickets: [{ name: 'test' }],
     headers: ['Test header'],

@@ -2,9 +2,9 @@
   <v-app>
     <v-app-bar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>NLP Parser</span>
+        <span>Excel To Json</span>
         &nbsp;
-        <span class="font-weight-light">Demo</span>
+        <span class="font-weight-light">Converter</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
     </v-app-bar>
