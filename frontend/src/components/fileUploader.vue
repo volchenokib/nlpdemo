@@ -1,12 +1,19 @@
 <template>
   <v-container>
-    <v-btn class="mb-2" color="primary" :disabled="isDisabled" outlined @click="setStep">next</v-btn>
+    <v-btn
+      class="mb-2"
+      color="primary"
+      :disabled="isDisabled"
+      outlined
+      @click="setStep"
+      >next</v-btn
+    >
 
     <vue-dropzone
       id="customdropzone"
       :options="dropzoneOptions"
       :useCustomSlot="true"
-      @vdropzone-file-added="isLoading = true"
+      @vdropzone-file-added="handleFileUpload"
       @vdropzone-complete="handleUpload"
       @vdropzone-removed-file="handleRemoveFile"
     >
@@ -54,6 +61,15 @@ export default {
   }),
 
   methods: {
+    handleFileUpload(file) {
+      console.log('file', file)
+      this.isLoading = true
+      let formData = new FormData()
+      formData.append('file', file)
+
+      this.$store.dispatch('sendFile', formData)
+    },
+
     setStep() {
       // this.isDisabled = true
       // if (this.step === 1) {
@@ -74,6 +90,7 @@ export default {
       //   )
       // }
       // this.step++
+
       this.$emit('next', 2)
     },
     handleUpload(file) {
