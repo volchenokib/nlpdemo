@@ -1,105 +1,7 @@
 <template>
   <v-container fluid>
     <v-layout text-lef wrap>
-      <v-stepper class="stepper" v-model="step">
-        <v-stepper-header>
-          <v-stepper-step class="text-capitalize" step="1">file uploding</v-stepper-step>
-
-          <v-divider></v-divider>
-
-          <v-stepper-step class="text-capitalize" step="2">product category</v-stepper-step>
-
-          <v-divider></v-divider>
-
-          <v-stepper-step class="text-capitalize" step="3">result</v-stepper-step>
-        </v-stepper-header>
-
-        <v-stepper-items>
-          <!-- loader -->
-          <v-progress-linear
-            color="deep-purple accent-4"
-            :active="isLoading"
-            :indeterminate="isLoading"
-            absolute
-            top
-          ></v-progress-linear>
-
-          <!-- step #1 -->
-          <component v-bind:is="currentTabComponent" @next="goToNextStep"></component>
-
-          <!-- step #2 -->
-          <v-stepper-content class="stepper-content" step="2">
-            <v-btn
-              class="mb-2 mr-2"
-              color="primary"
-              :disabled="isDisabled"
-              outlined
-              @click="goToPrevStep"
-            >назад</v-btn>
-            <v-btn
-              class="mb-2"
-              color="primary"
-              :disabled="currentCategory == ''"
-              outlined
-              @click="goToNextStep"
-            >далее</v-btn>
-
-            <div class="radio-wrapper">
-              <v-radio-group
-                v-model="currentCategory"
-                v-if="!isLoading"
-                class="ml-3"
-                @change="chooseCategory"
-              >
-                <v-radio
-                  v-for="(category, index) in categoryList"
-                  color="primary"
-                  :key="index"
-                  :label="category.name"
-                  :value="category.value"
-                ></v-radio>
-              </v-radio-group>
-            </div>
-          </v-stepper-content>
-
-          <!-- step #3 -->
-          <v-stepper-content class="stepper-content" step="3">
-            <v-btn
-              class="mb-2 mr-2"
-              color="primary"
-              :disabled="isDisabled"
-              outlined
-              @click="goToPrevStep"
-            >назад</v-btn>
-
-            <v-btn
-              color="blue-grey"
-              class="mb-2 white--text"
-              :disabled="isDisabled"
-              @click="forceFileDownload"
-            >
-              <v-icon class="mr-1" dark>mdi-cloud-download</v-icon>скачать
-            </v-btn>
-            <!-- <div class="excel-preview--large">
-              <span
-                v-if="isLoading"
-                class="preview-title title grey--text text--lighten-1"
-                >Предпросмотр недоступен</span
-              >
-
-              <v-data-table
-                v-else
-                item-key="name"
-                :headers="headers"
-                :items="tickets"
-                hide-default-footer
-                disable-sort
-                dense
-              ></v-data-table>
-            </div>-->
-          </v-stepper-content>
-        </v-stepper-items>
-      </v-stepper>
+      <component v-bind:is="currentTabComponent" @next="goToNextStep"></component>
     </v-layout>
   </v-container>
 </template>
@@ -127,14 +29,14 @@ export default {
       addRemoveLinks: true,
       dictRemoveFile: 'удалить',
       dictCancelUpload: 'отменить',
-      dictCancelUploadConfirmation: 'Вы уверены, что хотите отменить загрузку?'
+      dictCancelUploadConfirmation: 'Вы уверены, что хотите отменить загрузку?',
     },
     tickets: [{ name: 'test' }],
     headers: ['Test header'],
 
     baseUrl: 'http://volchenok.com/assets/',
     currentCategory: '',
-    excel: ''
+    excel: '',
   }),
 
   beforeDestroy() {
@@ -149,7 +51,7 @@ export default {
     dialog(val) {
       if (!val) return
       setTimeout(() => (this.dialog = false), 4000)
-    }
+    },
   },
 
   computed: {
@@ -175,13 +77,13 @@ export default {
         { name: 'стойка', value: 'стойка' },
         { name: 'стропы', value: 'стропы' },
         { name: 'траверса', value: 'траверса' },
-        { name: 'устройство', value: 'устройство' }
+        { name: 'устройство', value: 'устройство' },
       ]
       const g21 = [
         { name: 'кабели', value: 'кабели' },
         { name: 'муфта', value: 'муфта' },
         { name: 'наконечники', value: 'наконечники' },
-        { name: 'провод', value: 'провод' }
+        { name: 'провод', value: 'провод' },
       ]
       const g31 = [
         { name: 'бобышка', value: 'бобышка' },
@@ -190,7 +92,7 @@ export default {
         { name: 'компенсатор', value: 'компенсатор' },
         { name: 'отводы', value: 'отводы' },
         { name: 'переход', value: 'переход' },
-        { name: 'тройники', value: 'тройники' }
+        { name: 'тройники', value: 'тройники' },
       ]
 
       if (this.uploadedFileName === '16 - 25179.XLSX') {
@@ -203,7 +105,7 @@ export default {
         console.log('unknown file')
         return [{ name: 'unknown', value: 'unknown' }]
       }
-    }
+    },
   },
 
   methods: {
@@ -281,7 +183,7 @@ export default {
       }
       var bstr = arr.join('')
       var workbook = XLSX.read(bstr, {
-        type: 'binary'
+        type: 'binary',
       })
 
       console.log('workbook', workbook)
@@ -338,7 +240,7 @@ export default {
     },
     workbook_to_json(workbook) {
       var result = {}
-      workbook.SheetNames.forEach(function(sheetName) {
+      workbook.SheetNames.forEach(function (sheetName) {
         var roa = XLSX.utils.sheet_to_row_object_array(
           workbook.Sheets[sheetName]
         )
@@ -349,8 +251,8 @@ export default {
       console.log('workbook_to_json', result)
       this.get_header_row(result)
       return result
-    }
-  }
+    },
+  },
 }
 </script>
 

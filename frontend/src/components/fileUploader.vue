@@ -1,14 +1,5 @@
 <template>
   <v-container>
-    <v-btn
-      class="mb-2"
-      color="primary"
-      :disabled="isDisabled"
-      outlined
-      @click="setStep"
-      >next</v-btn
-    >
-
     <vue-dropzone
       id="customdropzone"
       :options="dropzoneOptions"
@@ -19,7 +10,7 @@
     >
       <div class="dropzone-custom-content">
         <div class="subtitle-1">
-          Drop files here or
+          Drop file here or
           <a class="primary--text">click to upload</a>
         </div>
       </div>
@@ -29,12 +20,13 @@
 
 <script>
 import vue2Dropzone from 'vue2-dropzone'
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
 export default {
   name: 'fileUploader',
 
   components: {
-    vueDropzone: vue2Dropzone
+    vueDropzone: vue2Dropzone,
   },
 
   data: () => ({
@@ -50,14 +42,14 @@ export default {
       maxFilesize: 0.5,
       addRemoveLinks: true,
       uploadMultiple: false,
-      maxFiles: 1
+      maxFiles: 1,
     },
     tickets: [{ name: 'test' }],
     headers: ['Test header'],
 
     baseUrl: 'http://volchenok.com/assets/',
     currentCategory: '',
-    excel: ''
+    excel: '',
   }),
 
   methods: {
@@ -102,7 +94,7 @@ export default {
     handleRemoveFile() {
       this.isDisabled = true
       this.uploadedFileName = ''
-    }
-  }
+    },
+  },
 }
 </script>

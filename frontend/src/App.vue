@@ -10,7 +10,17 @@
     </v-app-bar>
 
     <v-content>
-      <HelloWorld />
+      <div class="wrapper d-flex flex-nowrap">
+        <div class="upload-zone flex-grow-3">
+          <fileUploader />
+
+          <v-btn class="download-button mb-4" block color="secondary" dark>download</v-btn>
+        </div>
+
+        <div class="result-zone flex-grow-1">
+          <result />
+        </div>
+      </div>
     </v-content>
 
     <v-footer padless class="footer">
@@ -28,20 +38,41 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+// import HelloWorld from './components/HelloWorld'
+import fileUploader from '@/components/fileUploader.vue'
+import result from './components/result'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    // HelloWorld,
+    fileUploader,
+    result,
   },
   data: () => ({
     //
-  })
+  }),
 }
 </script>
 
 <style lang="scss" scoped>
+.wrapper {
+  height: 100%;
+}
+
+.upload-zone {
+  background-color: rgb(226, 226, 226);
+  position: relative;
+}
+
+.result-zone {
+}
+
+.download-button {
+  position: absolute;
+  bottom: 0;
+}
+
 .footer {
   color: #9c999c;
   font-size: 12px;
