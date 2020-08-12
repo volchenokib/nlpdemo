@@ -5,8 +5,14 @@ import axios from 'axios'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
+  state: {
+    result: null
+  },
+  mutations: {
+    SUCCESS(state, payload) {
+      state.result = payload
+    }
+  },
   actions: {
     async sendFile({ commit }, file) {
       try {
@@ -18,12 +24,19 @@ export default new Vuex.Store({
           })
           .then(res => {
             console.log('res', res.data)
+            commit('SUCCESS', res.data)
             console.log('SUCCESS!!')
           })
       } catch (e) {
         console.log('FAILURE!!')
         console.error(e)
       }
+    }
+  },
+
+  getters: {
+    fetchResult(state) {
+      return state.result
     }
   },
   modules: {}

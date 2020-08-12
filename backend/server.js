@@ -21,7 +21,7 @@ app.post('/', upload.single('file'), (req, res) => {
 	console.log('back', upload);
 
 	const result = excelToJson({
-		source: fs.readFileSync(path.resolve(__dirname, `./uploads/${req.file.filename}`)), // fs.readFileSync return a Buffer
+		source: fs.readFileSync(path.resolve(__dirname, `./uploads/${req.file.filename}`)),
 	});
 
 	console.log('result', result);
