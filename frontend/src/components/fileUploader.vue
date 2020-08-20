@@ -10,7 +10,8 @@
     >
       <div class="dropzone-custom-content">
         <div class="subtitle-1">
-          Drop file here or
+          Drop excel file here or
+          <br />
           <a class="primary--text">click to upload</a>
         </div>
       </div>
@@ -98,3 +99,16 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.dropzone {
+  min-height: 90vh;
+  position: relative;
+}
+
+.dz-message {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+</style>

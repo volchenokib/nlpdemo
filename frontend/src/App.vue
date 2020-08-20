@@ -1,6 +1,21 @@
 <template>
   <v-app>
-    <v-app-bar app>
+    <v-navigation-drawer v-model="drawerRight" app>
+      <fileUploader />
+
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn
+            class="mb-4"
+            :disabled="!isJsonFileExist"
+            color="secondary"
+            block
+          >download json file</v-btn>
+        </div>
+      </template>
+    </v-navigation-drawer>
+
+    <v-app-bar app collapse-on-scroll flat dark>
       <v-toolbar-title class="headline text-uppercase">
         <span>Excel To Json</span>
         &nbsp;
@@ -10,16 +25,8 @@
     </v-app-bar>
 
     <v-content>
-      <div class="wrapper d-flex flex-nowrap">
-        <div class="upload-zone flex-grow-3">
-          <fileUploader />
-
-          <v-btn class="download-button mb-4" block color="secondary" dark>download</v-btn>
-        </div>
-
-        <div class="result-zone flex-grow-1">
-          <result />
-        </div>
+      <div class="result-zone flex-grow-1">
+        <result />
       </div>
     </v-content>
 
@@ -52,6 +59,12 @@ export default {
   data: () => ({
     //
   }),
+
+  computed: {
+    isJsonFileExist() {
+      return false
+    },
+  },
 }
 </script>
 
@@ -66,11 +79,6 @@ export default {
 }
 
 .result-zone {
-}
-
-.download-button {
-  position: absolute;
-  bottom: 0;
 }
 
 .footer {
