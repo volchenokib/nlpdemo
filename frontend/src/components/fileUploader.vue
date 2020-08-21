@@ -6,7 +6,7 @@
       :useCustomSlot="true"
       @vdropzone-file-added="handleFileUpload"
       @vdropzone-complete="handleUpload"
-      @vdropzone-removed-file="handleRemoveFile"
+      @vdropzone-removed-file="fileDeleteHandler"
     >
       <div class="dropzone-custom-content">
         <div class="subtitle-1">
@@ -92,9 +92,8 @@ export default {
       this.isLoading = false
       this.uploadedFileName = file.name
     },
-    handleRemoveFile() {
-      this.isDisabled = true
-      this.uploadedFileName = ''
+    fileDeleteHandler() {
+      this.$store.commit('RESET')
     },
   },
 }
@@ -102,6 +101,8 @@ export default {
 
 <style lang="scss">
 .dropzone {
+  display: flex;
+  justify-content: center;
   min-height: 90vh;
   position: relative;
 }

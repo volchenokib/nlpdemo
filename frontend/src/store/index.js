@@ -11,6 +11,9 @@ export default new Vuex.Store({
   mutations: {
     SUCCESS(state, payload) {
       state.result = payload
+    },
+    RESET(state) {
+      state.result = null
     }
   },
   actions: {
@@ -36,7 +39,7 @@ export default new Vuex.Store({
 
   getters: {
     fetchResult(state) {
-      return state.result
+      return JSON.stringify(state.result)
     }
   },
   modules: {}

@@ -2,7 +2,7 @@
   <v-btn
     class="mb-4"
     color="secondary"
-    :disabled="!JsonFile"
+    :disabled="!isJsonFileExist"
     block
     @click="downloadFile"
   >download json file</v-btn>
@@ -10,7 +10,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
 export default {
   name: 'downloadButton',
   data: () => ({}),
@@ -19,15 +18,19 @@ export default {
     ...mapGetters({
       JsonFile: 'fetchResult',
     }),
+
+    isJsonFileExist() {
+      return this.$store.state.result
+    },
   },
 
   methods: {
     downloadFile() {
       const file = this.JsonFile
-      const url = window.URL.createObjectURL(new Blob([file.data]))
+      const url = window.URL.createObjectURL(new Blob([file]))
       const link = document.createElement('a')
       link.href = url
-      link.setAttribute('download', 'file.xlsx')
+      link.setAttribute('download', 'file.json')
       document.body.appendChild(link)
       link.click()
     },
