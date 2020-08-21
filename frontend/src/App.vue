@@ -5,12 +5,7 @@
 
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn
-            class="mb-4"
-            :disabled="!isJsonFileExist"
-            color="secondary"
-            block
-          >download json file</v-btn>
+          <downloadButton />
         </div>
       </template>
     </v-navigation-drawer>
@@ -30,7 +25,7 @@
       </div>
     </v-content>
 
-    <v-footer padless class="footer">
+    <v-footer flat padless class="footer">
       <div class="text-left footer_text">
         <strong>volchenok,</strong>
         {{ new Date().getFullYear() }}
@@ -45,14 +40,14 @@
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld'
-import fileUploader from '@/components/fileUploader.vue'
+import downloadButton from '@/components/downloadButton'
+import fileUploader from '@/components/fileUploader'
 import result from './components/result'
 
 export default {
   name: 'App',
   components: {
-    // HelloWorld,
+    downloadButton,
     fileUploader,
     result,
   },
