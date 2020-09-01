@@ -5,10 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"dev": "nodemon server.js",
-		"build": "cd frontend && npm run build",
-		"start": "node server.js",
-		"client": "cd frontend && npm run serve",
-		"install-client": "cd frontend && npm install"
+		"start": "node server.js"
 	},
 	"author": "",
 	"license": "ISC",
