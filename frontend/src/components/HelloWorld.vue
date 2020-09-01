@@ -102,7 +102,6 @@ export default {
       } else if (this.uploadedFileName === 'g31 - 64977.XLSX') {
         return g31
       } else {
-        console.log('unknown file')
         return [{ name: 'unknown', value: 'unknown' }]
       }
     },
@@ -114,7 +113,6 @@ export default {
     },
 
     goToNextStep(payload) {
-      console.log('payload', payload)
       this.isDisabled = true
       if (this.step === 1) {
         this.currentCategory = ''
@@ -163,11 +161,10 @@ export default {
         responseType: 'arraybuffer'
       })
         .then(response => {
-          console.log('response', response)
           // this.forceFileDownload(response);
           this.excel = response
         })
-        .catch(() => console.log('error occured'))
+        .catch((e) => console.error)
 
       // prettier-ignore
       // const response = `${this.baseUrl}${this.uploadedFileName.split(".")[0]} - ${this.currentCategory}.xlsx`;
@@ -185,8 +182,6 @@ export default {
       var workbook = XLSX.read(bstr, {
         type: 'binary',
       })
-
-      console.log('workbook', workbook)
 
       this.workbook_to_json(workbook)
 
@@ -222,7 +217,6 @@ export default {
         if (cell && cell.t) hdr = XLSX.utils.format_cell(cell)
         headers.push(hdr)
       }
-      console.log('get_header_row', sheet)
       return headers
     },
     fixdata(data) {
@@ -248,7 +242,6 @@ export default {
           result[sheetName] = roa
         }
       })
-      console.log('workbook_to_json', result)
       this.get_header_row(result)
       return result
     },

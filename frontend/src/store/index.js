@@ -26,11 +26,9 @@ export default new Vuex.Store({
             }
           })
           .then(res => {
-            console.log('res', res.data)
             commit('SUCCESS', res.data)
           })
       } catch (e) {
-        console.log('FAILURE!!')
         console.error(e)
       }
     }
