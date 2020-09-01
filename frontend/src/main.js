@@ -12,12 +12,3 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount('#app')
-
-// TODO:
-// + удалить лого econphysica
-// - in Eng
-// + eslint
-// - make the correct gitignore file
-// - оформить repo
-// - try auto code review
-// - настроить загрузку файлов с firebase
