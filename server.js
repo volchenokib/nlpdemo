@@ -8,14 +8,14 @@ const excelToJson = require('convert-excel-to-json');
 const cors = require('cors');
 const app = express();
 
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 3000;
 
 const corsOptions = {
 	origin: 'http://localhost:8080',
 };
 
 app.use(cors(corsOptions));
-app.use(serveStatic(__dirname + '/dist'));
+app.use(serveStatic(__dirname + 'frontend/dist'));
 
 // if (process.env.NODE_ENV === 'production') {
 // 	app.use(express.static('../frontend/dist'));
