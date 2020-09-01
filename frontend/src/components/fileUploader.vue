@@ -55,7 +55,6 @@ export default {
 
   methods: {
     handleFileUpload(file) {
-      console.log('file', file)
       this.isLoading = true
       let formData = new FormData()
       formData.append('file', file)

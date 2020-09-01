@@ -17,18 +17,11 @@ const upload = multer({ dest: 'uploads/' });
 app.use(cors(corsOptions));
 
 app.post('/', upload.single('file'), (req, res) => {
-	console.log('back', req.file);
-	console.log('back', upload);
-
 	const result = excelToJson({
 		source: fs.readFileSync(path.resolve(__dirname, `./uploads/${req.file.filename}`)),
 	});
 
-	console.log('result', result);
-
 	res.send(result);
 });
 
-app.listen(port, () => {
-	console.log(`Example app listening at http://localhost:${port}`);
-});
+app.listen(port, () => {});
