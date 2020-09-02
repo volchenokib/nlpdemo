@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+// import axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     result: null
   },
+
   mutations: {
     SUCCESS(state, payload) {
       state.result = payload
@@ -16,21 +17,26 @@ export default new Vuex.Store({
       state.result = null
     }
   },
+
   actions: {
-    async sendFile({ commit }, file) {
+    // async sendFile({ commit }, file) {
+    //   try {
+    //     await axios
+    //       .post('/', file, {
+    //         headers: {
+    //           'Content-Type': 'multipart/form-data'
+    //         }
+    //       })
+    //       .then(res => {
+    //         commit('SUCCESS', res.data)
+    //       })
+    //   } catch (e) {
+    //   }
+    // },
+    renderJson({ commit }, json) {
       try {
-        await axios
-          .post('http://localhost:3000', file, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
-          .then(res => {
-            commit('SUCCESS', res.data)
-          })
-      } catch (e) {
-        console.error(e)
-      }
+        commit('SUCCESS', json)
+      } catch (e) {}
     }
   },
 

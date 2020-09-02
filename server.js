@@ -16,19 +16,29 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(serveStatic(__dirname + 'frontend/dist'));
-
-// if (process.env.NODE_ENV === 'production') {
-// 	app.use(express.static('../frontend/dist'));
-// }
+// app.use(function (req, res, next) {
+// 	// prettier-ignore
+// 	res.setHeader('Content-Security-Policy', "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'");
+// 	return next();
+// });
 
 const upload = multer({ dest: 'uploads/' });
 
-app.post('/', upload.single('file'), (req, res) => {
+app.post('/api', upload.single('file'), (req, res) => {
 	const result = excelToJson({
 		source: fs.readFileSync(path.resolve(__dirname, `./uploads/${req.file.filename}`)),
 	});
 
 	res.send(result);
 });
+
+// Handle production
+if (process.env.NODE_ENV === 'production') {
+	// static folder
+	app.use(express.static(__dirname + '/public/'));
+
+	// handle spa
+	app.post(/.*/, (req, res) => res.sendFile(__dirname + 'public/index.html'));
+}
 
 app.listen(PORT, console.log(`Server is starting at ${PORT}`));

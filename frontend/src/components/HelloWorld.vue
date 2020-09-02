@@ -164,7 +164,7 @@ export default {
           // this.forceFileDownload(response);
           this.excel = response
         })
-        .catch((e) => console.error(e))
+        .catch()
 
       // prettier-ignore
       // const response = `${this.baseUrl}${this.uploadedFileName.split(".")[0]} - ${this.currentCategory}.xlsx`;

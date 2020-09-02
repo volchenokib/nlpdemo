@@ -4,8 +4,8 @@
       id="customdropzone"
       :options="dropzoneOptions"
       :useCustomSlot="true"
-      @vdropzone-file-added="handleFileUpload"
-      @vdropzone-complete="handleUpload"
+      @vdropzone-file-added="fileUploadHandler"
+      @vdropzone-success="handlerSuccessfulUpload"
       @vdropzone-removed-file="fileDeleteHandler"
     >
       <div class="dropzone-custom-content">
@@ -31,13 +31,12 @@ export default {
   },
 
   data: () => ({
-    // step: 1,
     isDisabled: true,
     isLoading: false,
     uploadedFile: [],
     uploadedFileName: '',
     dropzoneOptions: {
-      url: 'https://httpbin.org/post',
+      url: '/api',
       acceptedFiles: '.xls, .xlsx',
       thumbnailWidth: 150,
       maxFilesize: 0.5,
@@ -47,44 +46,23 @@ export default {
     },
     tickets: [{ name: 'test' }],
     headers: ['Test header'],
-
-    baseUrl: 'http://volchenok.com/assets/',
+    baseUrl: '/',
     currentCategory: '',
     excel: '',
   }),
 
   methods: {
-    handleFileUpload(file) {
-      this.isLoading = true
-      let formData = new FormData()
-      formData.append('file', file)
-
-      this.$store.dispatch('sendFile', formData)
+    fileUploadHandler(file) {
+      // this.isLoading = true
+      // let formData = new FormData()
+      // formData.append('file', file)
+      // this.$store.dispatch('sendFile', formData)
     },
 
-    setStep() {
-      // this.isDisabled = true
-      // if (this.step === 1) {
-      //   this.currentCategory = ''
-      //   this.isLoading = true
-      //   setTimeout(() => {
-      //     ;(this.isLoading = false)((this.isDisabled = false)((this.step = 2)))
-      //   }, 5000)
-      // } else if (this.step === 2) {
-      //   this.isLoading = true
-      //   // this.fileDownload()
-      //   setTimeout(
-      //     () =>
-      //       (this.isLoading = false)((this.isDisabled = false))(
-      //         this.$parent.createTable(this.excel)
-      //       ),
-      //     5000
-      //   )
-      // }
-      // this.step++
-
-      this.$emit('next', 2)
+    handlerSuccessfulUpload(file, response) {
+      this.$store.dispatch('renderJson', response)
     },
+
     handleUpload(file) {
       // this.$refs["excel-upload-input"].click();
       this.isDisabled = false
