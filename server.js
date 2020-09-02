@@ -33,12 +33,12 @@ app.post('/api', upload.single('file'), (req, res) => {
 });
 
 // Handle production
-if (process.env.NODE_ENV === 'production') {
-	// static folder
-	app.use(express.static(__dirname + '/public/'));
+// if (process.env.NODE_ENV === 'production') {
+// }
+// static folder
+app.use(express.static(__dirname + '/public/'));
 
-	// handle spa
-	app.post(/.*/, (req, res) => res.sendFile(__dirname + 'public/index.html'));
-}
+// handle spa
+app.post(/.*/, (req, res) => res.sendFile(__dirname + 'public/index.html'));
 
 app.listen(PORT, console.log(`Server is starting at ${PORT}`));
