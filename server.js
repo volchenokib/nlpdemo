@@ -16,11 +16,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(serveStatic(__dirname + 'frontend/dist'));
-// app.use(function (req, res, next) {
-// 	// prettier-ignore
-// 	res.setHeader('Content-Security-Policy', "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'");
-// 	return next();
-// });
 
 const upload = multer({ dest: 'uploads/' });
 
